@@ -1,0 +1,121 @@
+version: "2.1"
+services:
+  swag:
+    image: linuxserver/swag
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - URL=mikerlilly.com
+      - SUBDOMAINS=www,ombi,radarr,sonarr,jackett,bazarr,lidarr
+      - VALIDATION=http
+      - DNSPLUGIN=cloudflare
+#      - DUCKDNSTOKEN=<token> #optional
+#      - EMAIL=<e-mail> #optional
+#      - DHLEVEL=2048 #optional
+#      - ONLY_SUBDOMAINS=false #optional
+#      - EXTRA_DOMAINS=<extradomains> #optional
+      - STAGING=true
+    volumes:
+      - /Container/config/swag:/config
+    ports:
+      - 80:80 #optional
+      - 443:443
+    restart: unless-stopped
+#  ombi:
+#    image: linuxserver/ombi
+#    container_name: ombi
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=America/Denver
+#      - BASE_URL=/ombi
+#    volumes:
+#      - /Container/config/ombi:/config
+#    ports:
+#      - 3579:3579
+#    restart: unless-stopped
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - AUTO_UPDATE=true
+#      - RUN_OPTS=<run options here> #optional
+    volumes:
+      - /Container/config/jackett:/config
+      - /Temporary/jackett:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - UMASK_SET=022 #optional
+    volumes:
+      - /Container/config/bazarr:/config
+      - /Movies:/movies
+      - /TV-Shows:/tv
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - UMASK_SET=022 #optional
+    volumes:
+      - /Container/config/lidarr:/config
+      - /Music:/music
+      - /Downloads:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - UMASK_SET=022 #optional
+    volumes:
+      - /Container/config/sonarr:/config
+      - /TV-Shows:/tv
+      - /Downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - UMASK_SET=022 #optional
+    volumes:
+      - /Container/config/radarr:/config
+      - /Movies:/movies
+      - /Download:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+TODO:
+SWAG
+Also need to enter the credentials into the corresponding ini (or json for some plugins) file under /config/dns-conf.
+set staging to 
+https://hub.docker.com/r/linuxserver/swag
