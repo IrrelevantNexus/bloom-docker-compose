@@ -6,35 +6,35 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Denver
       - URL=mikerlilly.com
-      - SUBDOMAINS=www,ombi,radarr,sonarr,jackett,bazarr,lidarr
+      - SUBDOMAINS=wildcard
       - VALIDATION=http
       - DNSPLUGIN=cloudflare
 #      - DUCKDNSTOKEN=<token> #optional
-#      - EMAIL=<e-mail> #optional
+      - EMAIL=mikerlilly@gmail.com
 #      - DHLEVEL=2048 #optional
 #      - ONLY_SUBDOMAINS=false #optional
 #      - EXTRA_DOMAINS=<extradomains> #optional
-      - STAGING=true
+      - STAGING=false
     volumes:
-      - /Container/config/swag:/config
+      - /share/Container/config/swag:/config
     ports:
-      - 80:80 #optional
       - 443:443
+#      - 80:80 #optional
     restart: unless-stopped
 #  ombi:
 #    image: linuxserver/ombi
 #    container_name: ombi
 #    environment:
-#      - PUID=1000
-#      - PGID=1000
+#      - PUID=0
+#      - PGID=0
 #      - TZ=America/Denver
 #      - BASE_URL=/ombi
 #    volumes:
-#      - /Container/config/ombi:/config
+#      - /share/Container/config/ombi:/config
 #    ports:
 #      - 3579:3579
 #    restart: unless-stopped
@@ -42,14 +42,14 @@ services:
     image: linuxserver/jackett
     container_name: jackett
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Denver
       - AUTO_UPDATE=true
 #      - RUN_OPTS=<run options here> #optional
     volumes:
-      - /Container/config/jackett:/config
-      - /Temporary/jackett:/downloads
+      - /share/Container/config/jackett:/config
+      - /share/Temporary/jackett:/downloads
     ports:
       - 9117:9117
     restart: unless-stopped
@@ -57,14 +57,14 @@ services:
     image: linuxserver/bazarr
     container_name: bazarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Denver
       - UMASK_SET=022 #optional
     volumes:
-      - /Container/config/bazarr:/config
-      - /Movies:/movies
-      - /TV-Shows:/tv
+      - /share/Container/config/bazarr:/config
+      - /share/Movies:/movies
+      - /share/TV-Shows:/tv
     ports:
       - 6767:6767
     restart: unless-stopped
@@ -72,14 +72,14 @@ services:
     image: linuxserver/lidarr
     container_name: lidarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Denver
       - UMASK_SET=022 #optional
     volumes:
-      - /Container/config/lidarr:/config
+      - /share/Container/config/lidarr:/config
       - /Music:/music
-      - /Downloads:/downloads
+      - /share/Downloads:/downloads
     ports:
       - 8686:8686
     restart: unless-stopped
@@ -87,14 +87,14 @@ services:
     image: linuxserver/sonarr
     container_name: sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Denver
       - UMASK_SET=022 #optional
     volumes:
-      - /Container/config/sonarr:/config
-      - /TV-Shows:/tv
-      - /Downloads:/downloads
+      - /share/Container/config/sonarr:/config
+      - /share/TV-Shows:/tv
+      - /share/Downloads:/downloads
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -102,14 +102,28 @@ services:
     image: linuxserver/radarr
     container_name: radarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=America/Denver
       - UMASK_SET=022 #optional
     volumes:
-      - /Container/config/radarr:/config
-      - /Movies:/movies
-      - /Download:/downloads
+      - /share/Container/config/radarr:/config
+      - /share/Movies:/movies
+      - /share/Download:/downloads
     ports:
       - 7878:7878
+    restart: unless-stopped
+  deluge:
+    image: linuxserver/deluge
+    container_name: deluge
+    network_mode: host
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=America/Denver
+      - UMASK_SET=022 #optional
+      - DELUGE_LOGLEVEL=error #optional
+    volumes:
+      - /share/Container/config/deluge:/config
+      - /share/Download:/downloads
     restart: unless-stopped
